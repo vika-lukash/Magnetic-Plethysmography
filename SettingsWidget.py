@@ -117,12 +117,12 @@ class SettingsWidget(QWidget):
         self.layout.addWidget(self.stateLabel, 6, 1)
 
 
-       # self.startButton = QPushButton("Начать")
-        #  self.startButton.setMaximumWidth(150)
-        # self.startButton.setMinimumWidth(150)
-        # self.startButton.setIcon(QIcon("bluetooth-on.png"))
-        # self.startButton.clicked.connect(self.startMeasurment)
-        # self.layout.addWidget(self.startButton, 6, 2)
+        self.startButton = QPushButton("Начать")
+        self.startButton.setMaximumWidth(150)
+        self.startButton.setMinimumWidth(150)
+        self.startButton.setIcon(QIcon("bluetooth-on.png"))
+        self.startButton.clicked.connect(self.startMeasurment)
+        self.layout.addWidget(self.startButton, 6, 2)
 
 
         self.stopButton = QPushButton("Прервать")
@@ -141,10 +141,10 @@ class SettingsWidget(QWidget):
         self.calibrationButton.clicked.connect(self.calibration)
         self.layout.addWidget(self.calibrationButton, 7, 2)
 
-        # self.singleMeasurmentButton = QPushButton("Единичное измерение")
-        # self.singleMeasurmentButton.setIcon(QIcon("play.png"))
-        # self.singleMeasurmentButton.clicked.connect(self.singleMeasurment)
-        # self.layout.addWidget(self.singleMeasurmentButton, 7, 1)
+        self.singleMeasurmentButton = QPushButton("Единичное измерение")
+        self.singleMeasurmentButton.setIcon(QIcon("play.png"))
+        self.singleMeasurmentButton.clicked.connect(self.singleMeasurment)
+        self.layout.addWidget(self.singleMeasurmentButton, 7, 1)
 
         os.chdir(rootPath)
 

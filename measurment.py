@@ -4,12 +4,29 @@ import serial
 import os
 import time
 
-#проверка гита
+def parse_input_buffer(buf):
+    null_bit = buf[0] & 1
+    first_bit = (buf[0] & 1 << 1) >> 1
+    second_bit = (buf[0] & 1 << 2) >> 2
+    third_bit = (buf[0] & 1 << 3) >> 3
+    buf[1] = buf[1] | third_bit << 7
+    buf[2] = buf[2] | second_bit << 7
+    buf[3] = buf[3] | first_bit << 7
+    buf[4] = buf[4] | null_bit << 7
+    ch1 = bytearray(buf[1])
+    ch1.append(buf[2])
+    ch1.append(buf[3])
+    ch1.append(buf[4])
+    ch1 = int.from_bytes(ch1, byteorder='little')
+    return ch1
+
+
 def read_one_byte(port):
     while port.in_waiting == 0:
         pass
     bt = port.read(1)
     return bt
+
 
 def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, iGraph=False):
     ser = serial.Serial(port=port,
@@ -48,100 +65,14 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
         full_data.append(data)
 
     ser.close()
+    port1 = []
+    port2 = []
+    print(bin(int(86, 16))[2:].zfill(8))
 
-    for i in full_data:
-        print(i)
-        for j in data:
-            print(int.from_bytes(j, byteorder='little'))
-
-
-    listData = data.split("\\x")
-
-    u0 = []
-    i0 = []
-
-    scale = 16  ## equals to hexadecimal
-    num_of_bits = 8
-    numOfLines = 1
-    nums = []
-
-    for i in listData:
-        i = i.replace("'b'", "")
-        try:
-            if len(i) == 2:
-                nums.append(bin(int(i, scale))[2:].zfill(num_of_bits))
-            if len(i) == 3:
-                nums.append((bin(ord(i[-1]))[2:].zfill(num_of_bits)))
-
-        except:
-            # print("error" + i)
-            pass
-
-
-    for i in nums:
-        print(i)
-
-    for i in range(len(nums)):
-        if str(nums[i])[:4] == "0100":
-            i0.append(
-                str(nums[i])[4:] + str(nums[i + 1]) + str(nums[i + 2]) + str(nums[i + 3]) + str(nums[i + 4]))
-        elif str(nums[i])[:4] == "0110":
-            u0.append(
-                str(nums[i])[4:] + str(nums[i + 1]) + str(nums[i + 2]) + str(nums[i + 3]) + str(nums[i + 4]))
-
-    U = []
-    I = []
-    u1 = []
-
-    for i in range(len(u0)):
-        u0bin = (str(u0[i])[0] + str(u0[i])[5:12] + str(u0[i])[1] + str(u0[i])[13:20] + str(u0[i])[2] + str(
-            u0[i])[
-                                                                                                        21:28] +
-                 str(u0[i])[3] + str(u0[i])[29:36])
-        U.append((BitArray(bin=u0bin).int))
-        u1.append(u0bin)
-
-    for i in range(len(i0)):
-        i0bin = (str(i0[i])[0] + str(i0[i])[5:12] + str(i0[i])[1] + str(i0[i])[13:20] + str(i0[i])[2] + str(
-            i0[i])[
-                                                                                                        21:28] +
-                 str(i0[i])[3] + str(i0[i])[29:36])
-        I.append((BitArray(bin=i0bin).int))
-
-
-
-    if saving:
-        try:
-            os.mkdir(dirName)
-        except:
-            pass
-        saveData(dirName, num, U, I)
-
-    if uGraph:
-        plt.figure(1)
-        plt.plot(range(len(U)), U)
-        plt.show()
-
-    if iGraph:
-        plt.figure(2)
-        plt.plot(range(len(I)), I)
-        plt.show()
-
-
-def calibration(port, speed):
-    run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
-
-
-
-def saveData(dirName, num, U, I):
-    print("U = ", U)
-    print("I = ", I)
-
-
-    for i in range(len(U)):
-        fileName = dirName + "/%s.txt" % num
-        with open(fileName, "a") as file:
-            file.write(str(I[i]) + " " + str(U[i]))
-            file.write("\n")
-
+    for i in range(len(full_data)):
+        data1 = full_data[i]
+        half1 = data1[:6]
+        half2 = data1[5:]
+        port1.append(parse_input_buffer(half1))
+        port2.append(parse_input_buffer(half2))
 
