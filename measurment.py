@@ -4,7 +4,7 @@ import serial
 import os
 import time
 
-
+#проверка гита
 def read_one_byte(port):
     while port.in_waiting == 0:
         pass
