@@ -4,20 +4,19 @@ import serial
 import os
 import time
 
+def int_to_bytes(x):
+    return x.to_bytes((x.bit_length() + 7) // 8, 'big')
+
 def parse_input_buffer(buf):
-    null_bit = buf[0] & 1
-    first_bit = (buf[0] & 1 << 1) >> 1
-    second_bit = (buf[0] & 1 << 2) >> 2
-    third_bit = (buf[0] & 1 << 3) >> 3
-    buf[1] = buf[1] | third_bit << 7
-    buf[2] = buf[2] | second_bit << 7
-    buf[3] = buf[3] | first_bit << 7
-    buf[4] = buf[4] | null_bit << 7
-    ch1 = bytearray(buf[1])
-    ch1.append(buf[2])
-    ch1.append(buf[3])
-    ch1.append(buf[4])
-    ch1 = int.from_bytes(ch1, byteorder='little')
+    null_bit = int.from_bytes(buf[0], byteorder='little') & 1
+    first_bit = (int.from_bytes(buf[0], byteorder='little') & 1 << 1) >> 1
+    second_bit = (int.from_bytes(buf[0], byteorder='little') & 1 << 2) >> 2
+    third_bit = (int.from_bytes(buf[0], byteorder='little') & 1 << 3) >> 3
+    buf[1] = int.from_bytes(buf[1], byteorder='little') | third_bit << 7
+    buf[2] = int.from_bytes(buf[2], byteorder='little') | second_bit << 7
+    buf[3] = int.from_bytes(buf[3], byteorder='little') | first_bit << 7
+    buf[4] = int.from_bytes(buf[4], byteorder='little') | null_bit << 7
+    ch1 = int.from_bytes(int_to_bytes(buf[1]+buf[2]+buf[3]+buf[4]), byteorder='little')
     return ch1
 
 
@@ -67,7 +66,7 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     ser.close()
     port1 = []
     port2 = []
-    print(bin(int(86, 16))[2:].zfill(8))
+
 
     for i in range(len(full_data)):
         data1 = full_data[i]
