@@ -26,6 +26,10 @@ def read_one_byte(port):
     bt = port.read(1)
     return bt
 
+def saveData(dirName, num, port1, port2):
+    print("U1 = ", port1)
+    print("U2= ", port2)
+
 
 def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, iGraph=False):
     ser = serial.Serial(port=port,
@@ -68,10 +72,72 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     port2 = []
 
 
+
     for i in range(len(full_data)):
         data1 = full_data[i]
         half1 = data1[:6]
         half2 = data1[5:]
         port1.append(parse_input_buffer(half1))
         port2.append(parse_input_buffer(half2))
+        print(port1[i])
+
+   #fileName = os.path.join("C:\Users\vika-\Magnetic-Plethysmography\popitka.txt")
+    #if not os.path.exists(r'C:\Users\vika-\Magnetic-Plethysmography\'):
+   # path = r'C:\Users\vika-\Magnetic-Plethysmography'
+    #os.makedirs(path)
+
+    fileName = dirName + "/%s.txt" % num
+    os.makedirs(fileName)
+    fileName = os.path.join(fileName, 'results')
+
+    with open(fileName, "a") as file:
+        for i in range(len(port1)):
+            file.write(str(port1[i]) + " " + str(port2[i]))
+            file.write("\n")
+    plt.figure(1)
+    plt.plot(range(len(port1)), port1)
+    plt.plot(range(len(port2)), port2)
+    plt.show()
+
+
+
+
+
+
+ #if saving:
+  #  try:
+   #     os.mkdir(dirName)
+    #except:
+     #   pass
+    #saveData(dirName, num, port1, port2)
+
+
+
+
+
+def calibration(port,speed):
+    run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
+
+
+
+
+#if uGraph:
+        #plt.figure(1)
+       #plt.plot(range(len(port1)), port1)
+        #plt.show()
+
+
+#if iGraph:
+ #   plt.figure(2)
+  #  plt.plot(range(len(port2)), port2)
+   # plt.show()
+
+
+
+
+
+
+
+
+
 

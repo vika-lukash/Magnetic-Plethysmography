@@ -25,8 +25,8 @@ class PlotWidget(QWidget):
 
     def choose_directory(self):
         input_dir = QFileDialog.getOpenFileName()
-        I = []
-        U = []
+        port1 = []
+        port2 = []
 
         absPath = input_dir[0].split("/")
 
@@ -34,22 +34,22 @@ class PlotWidget(QWidget):
 
         with open(path, "r") as file:
             for line in file:
-                I.append(int(line.split(" ")[0]))
-                U.append(int(line.split(" ")[1]))
+                port1.append(int(line.split(" ")[0]))
+                port2.append(int(line.split(" ")[1]))
 
-        print("U = ", U)
-        print("I = ", I)
+        print("U1 = ", port1)
+        print("U2 = ", port2)
 
         plt.figure()
         plt.subplot(211)
-        plt.plot(range(len(U)), U)
-        plt.title("Напряжение")
+        plt.plot(range(len(port1)), port1)
+        plt.title("Напряжение порт 1")
 
         plt.subplot(212)
         plt.title("Ток")
-        plt.plot(range(len(I)), I)
+        plt.plot(range(len(port2)), port2)
         plt.tight_layout()
-        plt.savefig("plot.png")
+        plt.savefig("Напряжение порт 2")
 
         self.image.setPixmap(QPixmap("plot.png"))
 
