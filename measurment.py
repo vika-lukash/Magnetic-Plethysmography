@@ -4,16 +4,16 @@ import serial
 import os
 import time
 
-
+print(ord(b'\x80') << 24)
 def parse_input_buffer(buf):
     null_bit = ord((buf[0])) & 1
-    first_bit = (ord((buf[0])) & 1 << 1) >> 1
-    second_bit = (ord((buf[0])) & 1 << 2) >> 2
-    third_bit = (ord((buf[0])) & 1 << 3) >> 3
-    buf[1] = ord((buf[1])) | third_bit << 7
-    buf[2] = ord((buf[2])) | second_bit << 7
-    buf[3] = ord((buf[3])) | first_bit << 7
-    buf[4] = ord((buf[4])) | null_bit << 7
+    first_bit = (ord((buf[0])) & (1 << 1)) >> 1
+    second_bit = (ord((buf[0])) & (1 << 2)) >> 2
+    third_bit = (ord((buf[0])) & (1 << 3)) >> 3
+    buf[1] = (ord((buf[1])) & 127) | (third_bit << 7)
+    buf[2] = (ord((buf[2])) & 127) | second_bit << 7
+    buf[3] = (ord((buf[3])) & 127) | first_bit << 7
+    buf[4] = (ord((buf[4])) & 127) | null_bit << 7
     buf[0] = buf[1]
     buf[1] = buf[2]
     buf[2] = buf[3]
