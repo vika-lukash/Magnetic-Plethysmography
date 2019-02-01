@@ -4,26 +4,27 @@ import serial
 import os
 import time
 
-print(ord(b'\x80') << 24)
+
 def parse_input_buffer(buf):
     null_bit = ord((buf[0])) & 1
     first_bit = (ord((buf[0])) & (1 << 1)) >> 1
     second_bit = (ord((buf[0])) & (1 << 2)) >> 2
     third_bit = (ord((buf[0])) & (1 << 3)) >> 3
-    buf[1] = (ord((buf[1])) & 127) | (third_bit << 7)
-    buf[2] = (ord((buf[2])) & 127) | second_bit << 7
-    buf[3] = (ord((buf[3])) & 127) | first_bit << 7
-    buf[4] = (ord((buf[4])) & 127) | null_bit << 7
-    buf[0] = buf[1]
-    buf[1] = buf[2]
-    buf[2] = buf[3]
-    buf[3] = buf[4]
-    buf = buf[:4]
-    ch1 = 0
-    k = 3
-    for num in buf:
-        ch1 += num << k*8
-        k = k-1
+    buf_int = []
+    buf_int.append((ord((buf[1])) & 127) | (third_bit << 7))
+    buf_int.append((ord((buf[2])) & 127) | (second_bit << 7))
+    buf_int.append((ord((buf[3])) & 127) | (first_bit << 7))
+    buf_int.append((ord((buf[4])) & 127) | (null_bit << 7))
+    ch1 = (buf_int[0] << 24) | (buf_int[1] << 16) | (buf_int[2] << 8) | buf_int[3]
+    if ch1 > 2**31:
+        ch1 = ch1-2**32
+
+    print("bulbul" + str(ch1 - 2**31))
+   # ch1 = 0
+    #k = 3
+    #for num in buf:
+     #   ch1 += num << k*8
+      #  k = k-1
     return ch1
 
 
@@ -84,10 +85,11 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
         data1 = full_data[i]
         half1 = data1[:6]
         half2 = data1[5:]
-        port1.append(parse_input_buffer(half1))
+
         port2.append(parse_input_buffer(half2))
+        port1.append(parse_input_buffer(half1))
         print(port1[i])
-        print(port1[i])
+        print(port2[i])
 
    #fileName = os.path.join("C:\Users\vika-\Magnetic-Plethysmography\popitka.txt")
     #if not os.path.exists(r'C:\Users\vika-\Magnetic-Plethysmography\'):

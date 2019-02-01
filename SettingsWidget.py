@@ -134,17 +134,17 @@ class SettingsWidget(QWidget):
         self.layout.addWidget(self.stopButton, 6, 2)
 
 
-        self.calibrationButton = QPushButton("Калибровка")
-        self.calibrationButton.setMaximumWidth(150)
-        self.calibrationButton.setMinimumWidth(150)
-        self.calibrationButton.setIcon(QIcon("magnifier.png"))
-        self.calibrationButton.clicked.connect(self.calibration)
-        self.layout.addWidget(self.calibrationButton, 7, 2)
+        #self.calibrationButton = QPushButton("Калибровка")
+        #self.calibrationButton.setMaximumWidth(150)
+        #self.calibrationButton.setMinimumWidth(150)
+        #self.calibrationButton.setIcon(QIcon("magnifier.png"))
+        #self.calibrationButton.clicked.connect(self.calibration)
+        #self.layout.addWidget(self.calibrationButton, 7, 2)
 
-        self.singleMeasurmentButton = QPushButton("Единичное измерение")
-        self.singleMeasurmentButton.setIcon(QIcon("play.png"))
-        self.singleMeasurmentButton.clicked.connect(self.singleMeasurment)
-        self.layout.addWidget(self.singleMeasurmentButton, 7, 1)
+        #self.singleMeasurmentButton = QPushButton("Единичное измерение")
+        #self.singleMeasurmentButton.setIcon(QIcon("play.png"))
+        #self.singleMeasurmentButton.clicked.connect(self.singleMeasurment)
+        #self.layout.addWidget(self.singleMeasurmentButton, 7, 1)
 
         os.chdir(rootPath)
 
@@ -201,8 +201,7 @@ class SettingsWidget(QWidget):
                         speed=selectedSpeed,
                         dirName=dirName,
                         num=i,
-                        uGraph=False,
-                        iGraph=False
+
                     )
                     i += 1
                 except Exception as error:
