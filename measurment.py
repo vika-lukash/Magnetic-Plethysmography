@@ -4,6 +4,21 @@ import serial
 import os
 import time
 
+def calibration(port,speed):
+    run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
+
+
+
+def saveData(dirName, num, port1, port2):
+    print("port1 = ", port1)
+    print("port2 = ", port2)
+
+
+    for i in range(len(port1)):
+        fileName = dirName + "/%s.txt" % num
+        with open(fileName, "a") as file:
+            file.write(str(port1[i]) + " " + str(port2[i]))
+            file.write("\n")
 
 def parse_input_buffer(buf):
     null_bit = ord((buf[0])) & 1
@@ -33,10 +48,6 @@ def read_one_byte(port):
         pass
     bt = port.read(1)
     return bt
-
-def saveData(dirName, num, port1, port2):
-    print("U1 = ", port1)
-    print("U2= ", port2)
 
 
 def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, iGraph=False):
@@ -79,8 +90,6 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     port1 = []
     port2 = []
 
-
-
     for i in range(len(full_data)):
         data1 = full_data[i]
         half1 = data1[:6]
@@ -91,67 +100,24 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
         print(port1[i])
         print(port2[i])
 
-   #fileName = os.path.join("C:\Users\vika-\Magnetic-Plethysmography\popitka.txt")
-    #if not os.path.exists(r'C:\Users\vika-\Magnetic-Plethysmography\'):
-   # path = r'C:\Users\vika-\Magnetic-Plethysmography'
-    #os.makedirs(path)
 
-    fileName = dirName + "/%s.txt" % num
-    os.makedirs(fileName)
-    fileName = os.path.join(fileName, 'results')
 
-    with open(fileName, "a") as file:
-        for i in range(len(port1)):
-            file.write(str(port1[i]) + " " + str(port2[i]))
-            file.write("\n")
+
+    if saving:
+        try:
+            os.mkdir(dirName)
+        except:
+            pass
+        saveData(dirName, num, port1, port2)
+
+    #if uGraph:
     plt.figure(1)
     plt.plot(range(len(port1)), port1)
+
+    #if iGraph:
+    plt.figure(2)
     plt.plot(range(len(port2)), port2)
     plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
- #if saving:
-  #  try:
-   #     os.mkdir(dirName)
-    #except:
-     #   pass
-    #saveData(dirName, num, port1, port2)
-
-
-
-
-
-def calibration(port,speed):
-    run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
-
-
-
-
-#if uGraph:
-        #plt.figure(1)
-       #plt.plot(range(len(port1)), port1)
-        #plt.show()
-
-
-#if iGraph:
- #   plt.figure(2)
-  #  plt.plot(range(len(port2)), port2)
-   # plt.show()
-
-
-
-
-
 
 
 

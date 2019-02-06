@@ -9,7 +9,7 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.title = 'Магнитная плетизмография для измерения АД'
+        self.title = 'Магнитная плетизмография'
         self.left = 0
         self.top = 0
         self.width = 700
