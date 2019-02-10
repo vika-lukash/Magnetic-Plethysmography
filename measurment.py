@@ -12,6 +12,7 @@ def calibration(port,speed):
 def saveData(dirName, num, port1, port2):
     print("port1 = ", port1)
     print("port2 = ", port2)
+    count = 0
 
 
     for i in range(len(port1)):
@@ -19,6 +20,11 @@ def saveData(dirName, num, port1, port2):
         with open(fileName, "a") as file:
             file.write(str(port1[i]) + " " + str(port2[i]))
             file.write("\n")
+            count = count+1
+    print('количество', count)
+
+
+
 
 def parse_input_buffer(buf):
     null_bit = ord((buf[0])) & 1
@@ -84,7 +90,11 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
             one_byte = read_one_byte(ser)
             data.append(one_byte)
         print(data)
-        full_data.append(data)
+        if len(full_data) == 4096 :
+            break
+        else:
+            full_data.append(data)
+
 
     ser.close()
     port1 = []
