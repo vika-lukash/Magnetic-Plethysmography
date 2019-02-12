@@ -1,5 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QMessageBox, QApplication, QWidget, QTabWidget, QGridLayout
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QMessageBox, QApplication, QWidget, QTabWidget, QGridLayout,\
+    QInputDialog, QLineEdit, QPushButton
 from SettingsWidget import SettingsWidget
 from PlotWidget import PlotWidget
 
@@ -56,6 +57,45 @@ class MyTableWidget(QWidget):
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
+        self.initUI()
+
+    def initUI(self):
+        self.btn = QPushButton('ФИО пациента', self)
+        self.btn.move(20, 20)
+        self.btn.resize(200, 30)
+        self.btn.clicked.connect(self.showDialog)
+        self.btn.setStyleSheet("""
+                QPushButton{
+                    font-style: oblique;
+                    font-weight: bold;
+                    border: 1px solid #1DA1F2;
+                    border-radius: 15px;
+                    color: navy;
+                    background-color: lavenderblush;
+                }
+                """)
+
+        self.le = QLineEdit(self)
+        self.le.move(230, 20)
+        self.le.resize(300, 30)
+
+
+        #self.setGeometry(300, 300, 290, 150)
+        self.setWindowTitle('Input dialog')
+
+    def showDialog(self):
+        text, ok = QInputDialog.getText(self, 'Input Dialog',
+                                        'Введите ФИО пациента:')
+
+        if ok and text !='':
+            self.le.setText(str(text))
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
