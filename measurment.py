@@ -26,6 +26,7 @@ def saveData(dirName, num, port1, port2):
 
 
 
+
 def parse_input_buffer(buf):
     null_bit = ord((buf[0])) & 1
     first_bit = (ord((buf[0])) & (1 << 1)) >> 1
@@ -113,6 +114,7 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
 
 
 
+
     if saving:
         try:
             os.mkdir(dirName)
@@ -128,6 +130,7 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     plt.figure(2)
     plt.plot(range(len(port2)), port2)
     plt.show()
+
 
 
 
