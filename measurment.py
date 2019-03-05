@@ -3,6 +3,8 @@ from bitstring import BitArray
 import serial
 import os
 import time
+import numpy as np
+from Pulse import get_fourier_result, max_point, beauty_picture
 
 def calibration(port,speed):
     run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
@@ -22,8 +24,6 @@ def saveData(dirName, num, port1, port2):
             file.write("\n")
             count = count+1
     print('количество', count)
-
-
 
 
 
@@ -129,6 +129,26 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     #if iGraph:
     plt.figure(2)
     plt.plot(range(len(port2)), port2)
+
+    period = 1 / 488
+    pulse_freq = 0.0
+    new_spectra, freqs = get_fourier_result(port2, period)
+    y_max, pulse_freq = max_point(new_spectra, freqs)
+    #pulse_freq = f_of_max(new_spectra, freqs, y_max)
+    beauty_spectra, beauty_freqs = beauty_picture(freqs, new_spectra)
+    print(new_spectra)
+    print(freqs)
+    print('Максимальная точка = ', y_max)
+    print('freq = ', pulse_freq)
+    print('ЧСС = ', round(60 * pulse_freq, 2))
+
+
+    plt.figure(3)
+    plt.plot(freqs, new_spectra)
+
+    plt.figure(4)
+    plt.plot(beauty_freqs, beauty_spectra)
+
     plt.show()
 
 
