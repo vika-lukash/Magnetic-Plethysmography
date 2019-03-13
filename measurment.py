@@ -4,7 +4,11 @@ import serial
 import os
 import time
 import numpy as np
+import pylab
+from scipy import fft, ifft
+from scipy.optimize import curve_fit
 from Pulse import get_fourier_result, max_point, beauty_picture
+from peakdetect import _datacheck_peakdetect, _peakdetect_parabole_fitter, peakdetect, peakdetect_fft, peakdetect_parabole, peakdetect_sine, peakdetect_zero_crossing, _smooth, zero_crossings, _test_zero, _test,  _test_graph
 
 def calibration(port,speed):
     run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
@@ -148,6 +152,7 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
 
     plt.figure(4)
     plt.plot(beauty_freqs, beauty_spectra)
+
 
     plt.show()
 
