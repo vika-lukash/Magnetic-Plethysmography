@@ -9,6 +9,7 @@ from scipy import fft, ifft
 from scipy.optimize import curve_fit
 from Pulse import get_fourier_result, max_point, beauty_picture
 from peakdetect import _datacheck_peakdetect, _peakdetect_parabole_fitter, peakdetect, peakdetect_fft, peakdetect_parabole, peakdetect_sine, peakdetect_zero_crossing, _smooth, zero_crossings, _test_zero, _test,  _test_graph
+from DigitalFilter import processing
 
 def calibration(port,speed):
     run(port, speed, "calibration", message=b'\xFF', saving=False, uGraph=False, iGraph=True)
@@ -21,10 +22,10 @@ def saveData(dirName, num, port1, port2):
     count = 0
 
 
-    for i in range(len(port1)):
+    for i in range(len(port2)):
         fileName = dirName + "/%s.txt" % num
         with open(fileName, "a") as file:
-            file.write(str(port1[i]) + " " + str(port2[i]))
+            file.write(str(str(port2[i])))
             file.write("\n")
             count = count+1
     print('количество', count)
@@ -126,12 +127,12 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
             pass
         saveData(dirName, num, port1, port2)
 
-    #if uGraph:
-    plt.figure(1)
-    plt.plot(range(len(port1)), port1)
+    # #if uGraph:
+    # plt.figure(1)
+    # plt.plot(range(len(port1)), port1)
 
     #if iGraph:
-    plt.figure(2)
+    plt.figure(1)
     plt.plot(range(len(port2)), port2)
 
     period = 1 / 488
@@ -146,12 +147,18 @@ def run(port, speed, dirName, num=1, message=b'\01', saving=True, uGraph=True, i
     print('freq = ', pulse_freq)
     print('ЧСС = ', round(60 * pulse_freq, 2))
 
+    U = []
+    U = processing(port2)
 
-    plt.figure(3)
+
+    plt.figure(2)
     plt.plot(freqs, new_spectra)
 
-    plt.figure(4)
+    plt.figure(3)
     plt.plot(beauty_freqs, beauty_spectra)
+
+    plt.figure(4)
+    plt.plot(U)
 
 
     plt.show()

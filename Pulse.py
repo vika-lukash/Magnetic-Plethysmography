@@ -35,7 +35,7 @@ def max_point (new_spectra, freqs):
 
 def f_of_max (new_spectra, freqs, y_max):
     pulse_freq = 0.0
-    for i in range(4, 35):
+    for i in range(6, 35):
         if y_max == new_spectra[i]:
             pulse_freq = freqs[i]
     return pulse_freq
